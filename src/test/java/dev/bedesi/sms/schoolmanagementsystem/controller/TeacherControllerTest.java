@@ -1,6 +1,6 @@
 package dev.bedesi.sms.schoolmanagementsystem.controller;
 
-import dev.bedesi.sms.schoolmanagementsystem.entity.Teacher;
+import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.TeacherEntity;
 import dev.bedesi.sms.schoolmanagementsystem.service.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,18 +30,18 @@ public class TeacherControllerTest {
     @MockitoBean
     private TeacherService teacherService;
 
-    private Teacher testTeacher;
+    private TeacherEntity testTeacher;
 
     @BeforeEach
     void setUp() {
-        testTeacher = new Teacher();
-        testTeacher.setId(1L);
+        testTeacher = new TeacherEntity();
+        testTeacher.setId(1);
         testTeacher.setName("John Doe");
     }
 
     @Test
     void getAllTeachers_ReturnsTeacherList() throws Exception {
-        List<Teacher> teachers = Arrays.asList(testTeacher);
+        List<TeacherEntity> teachers = Arrays.asList(testTeacher);
         when(teacherService.getAllTeachers()).thenReturn(teachers);
 
         mockMvc.perform(get("/sms/teacher")
@@ -54,7 +54,7 @@ public class TeacherControllerTest {
 
     @Test
     void getTeacherById_ExistingId_ReturnsTeacher() throws Exception {
-        when(teacherService.getTeacherById(1L)).thenReturn(Optional.of(testTeacher));
+        when(teacherService.getTeacherById(1)).thenReturn(Optional.of(testTeacher));
 
         mockMvc.perform(get("/sms/teacher/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -65,7 +65,7 @@ public class TeacherControllerTest {
 
     @Test
     void getTeacherById_NonExistingId_ReturnsNotFound() throws Exception {
-        when(teacherService.getTeacherById(999L)).thenReturn(Optional.empty());
+        when(teacherService.getTeacherById(999)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/sms/teacher/999")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -74,7 +74,7 @@ public class TeacherControllerTest {
 
     @Test
     void createTeacher_ValidTeacher_ReturnsCreatedTeacher() throws Exception {
-        when(teacherService.createTeacher(any(Teacher.class))).thenReturn(testTeacher);
+        when(teacherService.createTeacher(any(TeacherEntity.class))).thenReturn(testTeacher);
 
         String teacherJson = "{\"name\":\"John Doe\"}";
 
