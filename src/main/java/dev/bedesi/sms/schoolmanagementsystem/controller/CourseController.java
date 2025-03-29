@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sms/course")
@@ -30,10 +31,17 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseEntity> getCourseById(@PathVariable int id) {
-        return courseService.getCourseById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Optional<CourseDTO>> getCourseById(@PathVariable int id) {
+        Optional<CourseEntity> courseEntityOptional = courseService.getCourseById(id);
+
+        if (courseEntityOptional.isPresent()) {
+            CourseEntity courseEntity = courseEntityOptional.get();
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setAllFieldsFromEntity(courseEntity);
+            return ResponseEntity.ok(Optional.of(courseDTO));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
@@ -44,8 +52,8 @@ public class CourseController {
     @PostMapping("/assign-teacher")
     public ResponseEntity<?> assignTeacher(@RequestBody CourseEntity course) {
         try {
-            TeacherDTO teacherDTO = courseService.assignTeacher(course);
-            return ResponseEntity.ok(teacherDTO); // 200 OK with the updated course on success
+            CourseDTO courseDTO = courseService.assignTeacher(course);
+            return ResponseEntity.ok(courseDTO); // 200 OK with the updated course on success
         } catch (EntityNotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND) // 404 status
