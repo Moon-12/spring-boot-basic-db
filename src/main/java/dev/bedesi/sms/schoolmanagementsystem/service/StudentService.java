@@ -1,10 +1,13 @@
 package dev.bedesi.sms.schoolmanagementsystem.service;
+
+import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,16 +17,33 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public Optional<StudentEntity> getStudentById(int id) {
-       return studentRepository.findById(id);
+    public Optional<StudentDTO> getStudentById(int id) {
+        Optional<StudentEntity> studentEntity = studentRepository.findById(id);
+        return studentEntity.map(entity -> {
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setAllFieldsFromEntity(entity);
+            return studentDTO;
+        });
     }
 
-    public List<StudentEntity> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentDTO> getAllStudents() {
+        List<StudentDTO> studentDTOList = new ArrayList<>();
+
+        studentRepository.findAll().stream()
+                .map(studentEntity -> {
+                    StudentDTO studentDTO = new StudentDTO();
+                    studentDTO.setAllFieldsFromEntity(studentEntity);
+                    return studentDTO;
+                })
+                .forEach(studentDTOList::add);
+        return studentDTOList;
+
     }
 
-    public StudentEntity createStudent(StudentEntity student) {
-        return studentRepository.save(student);
+    public StudentDTO createStudent(StudentEntity student) {
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setAllFieldsFromEntity(studentRepository.save(student));
+        return studentDTO;
     }
 
     public void deleteStudent(int id) {

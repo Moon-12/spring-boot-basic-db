@@ -2,6 +2,7 @@ package dev.bedesi.sms.schoolmanagementsystem.service;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentCourseAssignmentDTO;
+import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
@@ -91,7 +92,7 @@ public class CourseService {
         CourseEntity existingCourse = courseRepository.findById(courseID)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Course with ID " + courseID + " not found or already inactive"));
-        StudentEntity existingStudent = studentService.getStudentById(stdID)
+        StudentDTO existingStudent = studentService.getStudentById(stdID)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Teacher with ID " + stdID + " not found or already inactive"));
 

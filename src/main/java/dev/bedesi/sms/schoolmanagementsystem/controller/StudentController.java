@@ -1,5 +1,6 @@
 package dev.bedesi.sms.schoolmanagementsystem.controller;
 
+import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,19 +17,19 @@ public class StudentController {
     StudentService studentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentEntity> getStudentById(@PathVariable int id){
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable int id){
         return studentService.getStudentById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public List<StudentEntity> getAllStudents() {
+    public List<StudentDTO> getAllStudents() {
         return studentService.getAllStudents();
     }
 
     @PostMapping
-    public StudentEntity createStudent(@RequestBody StudentEntity student) {
+    public StudentDTO createStudent(@RequestBody StudentEntity student) {
         return studentService.createStudent(student);
     }
 
