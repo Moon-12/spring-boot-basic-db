@@ -16,15 +16,10 @@ public class StudentCourseAssignmentEntity {
     private int id;
     private float marks;
     private boolean active=true;
-//    @Column(name="std_id")
-//    private int studentId;
-//    @Column(name="course_id")
-//    private int courseId;
-
     @ManyToOne
     @JoinColumn(name="course_id",nullable = false)
     private CourseEntity courseEntity = new CourseEntity();
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="std_id",nullable = false)
     private StudentEntity studentEntity = new StudentEntity();
 
