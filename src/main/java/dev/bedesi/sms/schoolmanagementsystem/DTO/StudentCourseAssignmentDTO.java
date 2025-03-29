@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class StudentCourseDTO implements TranslateDTO<StudentCourseAssignmentEntity>{
+public class StudentCourseAssignmentDTO implements TranslateDTO<StudentCourseAssignmentEntity>{
     private int id;
 
     @Override

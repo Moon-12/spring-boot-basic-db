@@ -1,7 +1,7 @@
 package dev.bedesi.sms.schoolmanagementsystem.service;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
-import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
+import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentCourseAssignmentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
@@ -85,7 +85,7 @@ public class CourseService {
         return courseDTO;
     }
 
-    public StudentDTO assignStudent(StudentCourseAssignmentEntity studentCourseAssignmentEntity) {
+    public StudentCourseAssignmentDTO assignStudent(StudentCourseAssignmentEntity studentCourseAssignmentEntity) {
         int courseID = studentCourseAssignmentEntity.getCourseEntity().getId();
         int stdID = studentCourseAssignmentEntity.getStudentEntity().getId();
         CourseEntity existingCourse = courseRepository.findById(courseID)
@@ -102,6 +102,8 @@ public class CourseService {
         }
 
         StudentCourseAssignmentEntity savedStudentCourseAssignmentEntity =studentCourseService.enrollStudent(studentCourseAssignmentEntity);
-        return new StudentDTO(existingStudent.getId(),existingStudent.getRollNo(),existingStudent.getName());
+        StudentCourseAssignmentDTO studentCourseAssignmentDTO=new StudentCourseAssignmentDTO();
+        studentCourseAssignmentDTO.setAllFieldsFromEntity(savedStudentCourseAssignmentEntity);
+        return studentCourseAssignmentDTO ;
     }
 }

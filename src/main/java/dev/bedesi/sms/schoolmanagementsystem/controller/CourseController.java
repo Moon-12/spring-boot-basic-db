@@ -1,6 +1,7 @@
 package dev.bedesi.sms.schoolmanagementsystem.controller;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
+import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentCourseAssignmentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
@@ -12,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -58,7 +61,7 @@ public class CourseController {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND) // 404 status
                     .body("course or teacher does not exist"); // Custom message
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT) // 409 Conflict status
                     .body(e.getMessage()); // "Course with ID X already has a teacher assigned"
@@ -68,13 +71,18 @@ public class CourseController {
     @PostMapping("/assign-student")
     public ResponseEntity<?> assignStudent(@RequestBody StudentCourseAssignmentEntity studentCourse) {
         try {
-            StudentDTO studentDTO = courseService.assignStudent(studentCourse);
-            return ResponseEntity.ok(studentDTO); // 200 OK with the updated course on success
+            StudentCourseAssignmentDTO studentCourseAssignmentDTO = courseService.assignStudent(studentCourse);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Student successfully assigned to course");
+            response.put("data", studentCourseAssignmentDTO);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(response); // 200 OK with the updated course on success
         } catch (EntityNotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND) // 404 status
                     .body("student or course does not exist"); // Custom message
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT) // 409 Conflict status
                     .body(e.getMessage()); // ""Student with ID is already actively enrolled in course with ID"
