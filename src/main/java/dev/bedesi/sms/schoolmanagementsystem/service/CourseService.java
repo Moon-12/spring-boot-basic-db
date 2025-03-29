@@ -2,7 +2,6 @@ package dev.bedesi.sms.schoolmanagementsystem.service;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
-import dev.bedesi.sms.schoolmanagementsystem.DTO.TeacherDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
@@ -38,32 +37,33 @@ public class CourseService {
 
     public List<CourseDTO> getAllCourses() {
         List<CourseDTO> courseDaoList = new ArrayList<>();
-        courseRepository.findAll().forEach(courseEntity ->
-                courseDaoList.add(new CourseDTO(courseEntity.getId(), courseEntity.getName(),courseEntity.getActive())));
+//        courseRepository.findAll().forEach(courseEntity ->
+//                courseDaoList.add(new CourseDTO(courseEntity.getId(), courseEntity.getName(),courseEntity.getActive())));
         return courseDaoList;
     }
 
     public Optional<CourseEntity> getCourseById(int id) {
-        return courseRepository.findById(id)
-                .map(course -> {
-                    int teacherId = course.getTeacher() != null ? course.getTeacher().getId() : 0;
-                    if (teacherId != 0) {
-                        return teacherService.getTeacherById(teacherId)
-                                .map(teacher -> {
-                                    course.setTeacher(teacher);
-                                    return course;
-                                })
-                                .orElse(course);
-                    }
-                    return course;
-                });
+//        return courseRepository.findById(id)
+//                .map(course -> {
+//                    int teacherId = course.getTeacher() != null ? course.getTeacher().getId() : 0;
+//                    if (teacherId != 0) {
+//                        return teacherService.getTeacherById(teacherId)
+//                                .map(teacher -> {
+//                                    course.setTeacher(teacher);
+//                                    return course;
+//                                })
+//                                .orElse(course);
+//                    }
+//                    return course;
+//                });
+        return courseRepository.findById(id);
     }
 
     public CourseEntity createCourse(CourseEntity course) {
         return courseRepository.save(course);
     }
 
-    public TeacherDTO assignTeacher(CourseEntity courseEntity) {
+    public CourseDTO assignTeacher(CourseEntity courseEntity) {
         Objects.requireNonNull(courseEntity, "Course cannot be null");
         CourseEntity existingCourse = courseRepository.findById(courseEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -80,7 +80,9 @@ public class CourseService {
 
         existingCourse.setTeacher(teacher);
         CourseEntity savedCourseEntity =courseRepository.save(existingCourse);
-        return new TeacherDTO(savedCourseEntity.getTeacher().getId());
+        CourseDTO courseDTO= new CourseDTO();
+        courseDTO.setAllFieldsFromEntity(savedCourseEntity);
+        return courseDTO;
     }
 
     public StudentDTO assignStudent(StudentCourseEntity studentCourseEntity) {

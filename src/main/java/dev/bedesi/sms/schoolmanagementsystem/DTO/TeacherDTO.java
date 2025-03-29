@@ -1,12 +1,17 @@
 package dev.bedesi.sms.schoolmanagementsystem.DTO;
 
+import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.TeacherEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class TeacherDTO {
-    private int id;
-    public TeacherDTO(int id){
-        this.id=id;
+@NoArgsConstructor
+public class TeacherDTO implements TranslateDTO<TeacherEntity>{
+    private String name;
+
+    @Override
+    public void setAllFieldsFromEntity(TeacherEntity entity) {
+        this.name= entity.getName();
     }
 }
