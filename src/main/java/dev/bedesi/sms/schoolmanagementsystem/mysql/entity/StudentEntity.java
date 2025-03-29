@@ -22,7 +22,7 @@ public class StudentEntity {
     private String name;
     private Boolean active=true;
 
-    @ManyToMany(mappedBy = "studentEntitySet")
-    @JsonIgnore
-    private Set<CourseEntity> courseEntitySet = new HashSet<>();
+//    @ManyToMany(mappedBy = "studentEntitySet")
+//    @JsonIgnore
+//    private Set<CourseEntity> courseEntitySet = new HashSet<>();
 }

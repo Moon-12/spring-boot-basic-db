@@ -2,9 +2,8 @@ package dev.bedesi.sms.schoolmanagementsystem.controller;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
-import dev.bedesi.sms.schoolmanagementsystem.DTO.TeacherDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
-import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseEntity;
+import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.service.CourseService;
 import dev.bedesi.sms.schoolmanagementsystem.service.StudentCourseService;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,6 +35,7 @@ public class CourseController {
 
         if (courseEntityOptional.isPresent()) {
             CourseEntity courseEntity = courseEntityOptional.get();
+            int studentCount = courseEntity.getStudentCourseEntities().size();
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setAllFieldsFromEntity(courseEntity);
             return ResponseEntity.ok(Optional.of(courseDTO));
@@ -66,7 +66,7 @@ public class CourseController {
     }
 
     @PostMapping("/assign-student")
-    public ResponseEntity<?> assignStudent(@RequestBody StudentCourseEntity studentCourse) {
+    public ResponseEntity<?> assignStudent(@RequestBody StudentCourseAssignmentEntity studentCourse) {
         try {
             StudentDTO studentDTO = courseService.assignStudent(studentCourse);
             return ResponseEntity.ok(studentDTO); // 200 OK with the updated course on success

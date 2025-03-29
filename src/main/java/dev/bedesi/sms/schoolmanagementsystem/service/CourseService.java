@@ -3,7 +3,7 @@ package dev.bedesi.sms.schoolmanagementsystem.service;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
-import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseEntity;
+import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.TeacherEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.repository.CourseRepository;
@@ -85,9 +85,9 @@ public class CourseService {
         return courseDTO;
     }
 
-    public StudentDTO assignStudent(StudentCourseEntity studentCourseEntity) {
-        int courseID = studentCourseEntity.getCourseId();
-        int stdID = studentCourseEntity.getStudentId();
+    public StudentDTO assignStudent(StudentCourseAssignmentEntity studentCourseAssignmentEntity) {
+        int courseID = studentCourseAssignmentEntity.getCourseEntity().getId();
+        int stdID = studentCourseAssignmentEntity.getStudentEntity().getId();
         CourseEntity existingCourse = courseRepository.findById(courseID)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Course with ID " + courseID + " not found or already inactive"));
@@ -96,12 +96,12 @@ public class CourseService {
                         "Teacher with ID " + stdID + " not found or already inactive"));
 
         // Check if an active enrollment exists
-        if (studentCourseService.checkEnrollmentActive(studentCourseEntity)) {
+        if (studentCourseService.checkEnrollmentActive(studentCourseAssignmentEntity)) {
             throw new IllegalStateException(
                     "Student with ID " + stdID + " is already actively enrolled in course with ID " + courseID);
         }
 
-        StudentCourseEntity savedStudentCourseEntity=studentCourseService.enrollStudent(studentCourseEntity);
+        StudentCourseAssignmentEntity savedStudentCourseAssignmentEntity =studentCourseService.enrollStudent(studentCourseAssignmentEntity);
         return new StudentDTO(existingStudent.getId(),existingStudent.getRollNo(),existingStudent.getName());
     }
 }
