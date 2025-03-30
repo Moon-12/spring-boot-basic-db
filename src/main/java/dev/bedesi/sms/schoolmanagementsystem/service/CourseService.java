@@ -1,11 +1,11 @@
 package dev.bedesi.sms.schoolmanagementsystem.service;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
+import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDetailedDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentCourseAssignmentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
-import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.TeacherEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.repository.CourseRepository;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.repository.TeacherRepository;
@@ -13,10 +13,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
@@ -37,10 +37,13 @@ public class CourseService {
     private StudentCourseService studentCourseService;
 
     public List<CourseDTO> getAllCourses() {
-        List<CourseDTO> courseDaoList = new ArrayList<>();
-//        courseRepository.findAll().forEach(courseEntity ->
-//                courseDaoList.add(new CourseDTO(courseEntity.getId(), courseEntity.getName(),courseEntity.getActive())));
-        return courseDaoList;
+        return courseRepository.findAll().stream()
+                .map(courseEntity -> {
+                    CourseDTO courseDTO = new CourseDTO();
+                    courseDTO.setAllFieldsFromEntity(courseEntity);
+                    return courseDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     public Optional<CourseEntity> getCourseById(int id) {
@@ -64,7 +67,7 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    public CourseDTO assignTeacher(CourseEntity courseEntity) {
+    public CourseDetailedDTO assignTeacher(CourseEntity courseEntity) {
         Objects.requireNonNull(courseEntity, "Course cannot be null");
         CourseEntity existingCourse = courseRepository.findById(courseEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -81,7 +84,7 @@ public class CourseService {
 
         existingCourse.setTeacher(teacher);
         CourseEntity savedCourseEntity =courseRepository.save(existingCourse);
-        CourseDTO courseDTO= new CourseDTO();
+        CourseDetailedDTO courseDTO= new CourseDetailedDTO();
         courseDTO.setAllFieldsFromEntity(savedCourseEntity);
         return courseDTO;
     }

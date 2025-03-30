@@ -1,8 +1,8 @@
 package dev.bedesi.sms.schoolmanagementsystem.controller;
 
 import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDTO;
+import dev.bedesi.sms.schoolmanagementsystem.DTO.CourseDetailedDTO;
 import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentCourseAssignmentDTO;
-import dev.bedesi.sms.schoolmanagementsystem.DTO.StudentDTO;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.CourseEntity;
 import dev.bedesi.sms.schoolmanagementsystem.mysql.entity.StudentCourseAssignmentEntity;
 import dev.bedesi.sms.schoolmanagementsystem.service.CourseService;
@@ -33,13 +33,13 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<CourseDTO>> getCourseById(@PathVariable int id) {
+    public ResponseEntity<Optional<CourseDetailedDTO>> getCourseById(@PathVariable int id) {
         Optional<CourseEntity> courseEntityOptional = courseService.getCourseById(id);
 
         if (courseEntityOptional.isPresent()) {
             CourseEntity courseEntity = courseEntityOptional.get();
             int studentCount = courseEntity.getStudentCourseEntities().size();
-            CourseDTO courseDTO = new CourseDTO();
+            CourseDetailedDTO courseDTO = new CourseDetailedDTO();
             courseDTO.setAllFieldsFromEntity(courseEntity);
             return ResponseEntity.ok(Optional.of(courseDTO));
         } else {
@@ -55,7 +55,7 @@ public class CourseController {
     @PostMapping("/assign-teacher")
     public ResponseEntity<?> assignTeacher(@RequestBody CourseEntity course) {
         try {
-            CourseDTO courseDTO = courseService.assignTeacher(course);
+            CourseDetailedDTO courseDTO = courseService.assignTeacher(course);
             return ResponseEntity.ok(courseDTO); // 200 OK with the updated course on success
         } catch (EntityNotFoundException e) {
             return ResponseEntity
