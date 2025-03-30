@@ -19,7 +19,7 @@ public class CourseDetailedDTO implements TranslateDTO<CourseEntity> {
     private boolean active;
     private TeacherDTO teacher = new TeacherDTO();
 
-    private List<StudentDTO> studentList = new ArrayList<>();
+    private List<StudentCourseAssignmentDTO> StudentCourseAssignmentDTO = new ArrayList<>();
 
     @Override
     public void setAllFieldsFromEntity(CourseEntity entity) {
@@ -27,11 +27,11 @@ public class CourseDetailedDTO implements TranslateDTO<CourseEntity> {
         this.name = entity.getName();
         this.active = entity.getActive();
         this.teacher.setAllFieldsFromEntity(entity.getTeacher());
-        this.studentList = entity.getStudentCourseEntities().stream()
+        this.StudentCourseAssignmentDTO = entity.getStudentCourseEntities().stream()
                 .map(studentCourseAssignmentEntity -> {
-                    StudentDTO studentDTO = new StudentDTO();
-                    studentDTO.setAllFieldsFromEntity(studentCourseAssignmentEntity.getStudentEntity());
-                    return studentDTO;
+                    StudentCourseAssignmentDTO studentCourseAssignmentDTO=new StudentCourseAssignmentDTO();
+                    studentCourseAssignmentDTO.setAllFieldsFromEntity(studentCourseAssignmentEntity);
+                    return  studentCourseAssignmentDTO;
                 })
                 .collect(Collectors.toList());
     }
