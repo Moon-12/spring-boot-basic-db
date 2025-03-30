@@ -46,8 +46,15 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<CourseEntity> getCourseById(int id) {
-        return courseRepository.findById(id);
+    public Optional<CourseDetailedDTO> getCourseById(int id) {
+        Optional<CourseEntity> courseEntityOptional = courseRepository.findById(id);
+        CourseDetailedDTO courseDetailedDTO = new CourseDetailedDTO();
+        if (courseEntityOptional.isPresent()) {
+            CourseEntity courseEntity = courseEntityOptional.get();
+            courseDetailedDTO.setAllFieldsFromEntity(courseEntity);
+        }
+        return Optional.of(courseDetailedDTO);
+
     }
 
     public CourseEntity createCourse(CourseEntity course) {

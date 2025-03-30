@@ -34,14 +34,10 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCourseById(@PathVariable int id) {
-        Optional<CourseEntity> courseEntityOptional = courseService.getCourseById(id);
-
-        if (courseEntityOptional.isPresent()) {
-            CourseEntity courseEntity = courseEntityOptional.get();
-            CourseDetailedDTO courseDetailedDTO= new CourseDetailedDTO();
-            courseDetailedDTO.setAllFieldsFromEntity(courseEntity);
+        Optional<CourseDetailedDTO> courseDetailedDTOOptional = courseService.getCourseById(id);
+        if (courseDetailedDTOOptional.isPresent()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data",courseDetailedDTO);
+            response.put("data",courseDetailedDTOOptional);
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.notFound().build();
