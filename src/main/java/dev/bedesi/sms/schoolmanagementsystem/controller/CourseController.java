@@ -33,15 +33,16 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<CourseDetailedDTO>> getCourseById(@PathVariable int id) {
+    public ResponseEntity<?> getCourseById(@PathVariable int id) {
         Optional<CourseEntity> courseEntityOptional = courseService.getCourseById(id);
 
         if (courseEntityOptional.isPresent()) {
             CourseEntity courseEntity = courseEntityOptional.get();
-            int studentCount = courseEntity.getStudentCourseEntities().size();
-            CourseDetailedDTO courseDTO = new CourseDetailedDTO();
-            courseDTO.setAllFieldsFromEntity(courseEntity);
-            return ResponseEntity.ok(Optional.of(courseDTO));
+            CourseDetailedDTO courseDetailedDTO= new CourseDetailedDTO();
+            courseDetailedDTO.setAllFieldsFromEntity(courseEntity);
+            Map<String, Object> response = new HashMap<>();
+            response.put("data",courseDetailedDTO);
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.notFound().build();
         }

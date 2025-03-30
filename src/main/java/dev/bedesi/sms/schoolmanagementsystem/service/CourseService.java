@@ -47,19 +47,6 @@ public class CourseService {
     }
 
     public Optional<CourseEntity> getCourseById(int id) {
-//        return courseRepository.findById(id)
-//                .map(course -> {
-//                    int teacherId = course.getTeacher() != null ? course.getTeacher().getId() : 0;
-//                    if (teacherId != 0) {
-//                        return teacherService.getTeacherById(teacherId)
-//                                .map(teacher -> {
-//                                    course.setTeacher(teacher);
-//                                    return course;
-//                                })
-//                                .orElse(course);
-//                    }
-//                    return course;
-//                });
         return courseRepository.findById(id);
     }
 
@@ -92,10 +79,10 @@ public class CourseService {
     public StudentCourseAssignmentDTO assignStudent(StudentCourseAssignmentEntity studentCourseAssignmentEntity) {
         int courseID = studentCourseAssignmentEntity.getCourseEntity().getId();
         int stdID = studentCourseAssignmentEntity.getStudentEntity().getId();
-        CourseEntity existingCourse = courseRepository.findById(courseID)
+         courseRepository.findById(courseID)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Course with ID " + courseID + " not found or already inactive"));
-        StudentDTO existingStudent = studentService.getStudentById(stdID)
+        studentService.getStudentById(stdID)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Teacher with ID " + stdID + " not found or already inactive"));
 
