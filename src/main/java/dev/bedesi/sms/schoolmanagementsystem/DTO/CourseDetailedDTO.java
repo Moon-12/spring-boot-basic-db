@@ -17,7 +17,7 @@ public class CourseDetailedDTO implements TranslateDTO<CourseEntity> {
     private int id;
     private String name;
     private boolean active;
-    private TeacherDTO teacher = new TeacherDTO();
+    private TeacherDTO teacherDTO = new TeacherDTO();
 
     private List<StudentCourseAssignmentDTO> StudentCourseAssignmentDTO = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class CourseDetailedDTO implements TranslateDTO<CourseEntity> {
         this.id = entity.getId();
         this.name = entity.getName();
         this.active = entity.getActive();
-        this.teacher.setAllFieldsFromEntity(entity.getTeacher());
+        this.teacherDTO.setAllFieldsFromEntity(entity.getTeacher());
         this.StudentCourseAssignmentDTO = entity.getStudentCourseEntities().stream()
                 .map(studentCourseAssignmentEntity -> {
                     StudentCourseAssignmentDTO studentCourseAssignmentDTO=new StudentCourseAssignmentDTO();
